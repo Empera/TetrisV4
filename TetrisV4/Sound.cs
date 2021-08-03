@@ -8,13 +8,15 @@ namespace TetrisV4
 {
     class Sound
     {
+        
+        
 
         private static int volumeLevel = 100;
         public static bool EnableSound = true;
 
         public Sound()
         {
-
+            
         }
 
         public static void PlayMusic()

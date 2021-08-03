@@ -213,6 +213,14 @@ namespace TetrisV4
             {
                 switch (e.KeyCode)
                 {
+                    case Keys.Enter:
+                        if(bGameOver)
+                        {
+                            InitializeNewGame();
+                            game_tick_timer.Start();
+                        }
+                        break;
+
                     case Keys.Down:
                         game_tick_timer.Interval = 50;
                         break;
@@ -328,7 +336,7 @@ namespace TetrisV4
                     Graphics.DrawMainMenu(e, iMainMenuCursorPosition);
                     break;
                 case 1:
-                    Graphics.DrawGame(e, fieldPoint, posX, posY, tetrisMap, activeBlock, nextBlock, iHighscore);
+                    Graphics.DrawGame(e, fieldPoint, posX, posY, tetrisMap, activeBlock, nextBlock, iHighscore, bGameOver);
                     break;
                 case 2:
                     break;
@@ -346,6 +354,7 @@ namespace TetrisV4
         private static void InitializeNewGame()
         {
             iHighscore = 0;
+            bGameOver = false;
             posY = 0;
             posX = 4;
 
