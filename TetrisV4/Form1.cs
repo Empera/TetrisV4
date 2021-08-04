@@ -84,8 +84,11 @@ namespace TetrisV4
         static private int IWhatToDraw = 0;
         static private int iHighscore = 0;
 
+        static private float fVersion = 0.1f;
+
         static private bool bGameOver = false;
         static private bool bGameIsRunning = true;
+        static private bool bDisplayKeybinds = false;
         
         static BLOCK[,] tetrisMap = new BLOCK[21, 22];
         static BLOCK[,] activeBlock = new BLOCK[4, 4];
@@ -142,6 +145,8 @@ namespace TetrisV4
             {
                 Environment.Exit(1);
             }
+
+            Sound.InitializeSound();
         }
 
         /* 
@@ -162,7 +167,16 @@ namespace TetrisV4
 
         private void Key_Down_Event_Handler(object sender, KeyEventArgs e)
         {
+            if(e.KeyCode == Keys.M)
+            {
+                if (Sound.IsMusicPlaying())
+                {
+                    Sound.Enable(false);
+                    return;
+                }
 
+                Sound.Enable(true);
+            }
             //All key commands available in the main menu.
             if(IWhatToDraw == (int)Draw.MainMenu)
             {
@@ -264,7 +278,7 @@ namespace TetrisV4
             }
 
             //All key commands available in the options menu.
-            else if (IWhatToDraw == (int)Draw.Options)
+            else if (IWhatToDraw == (int)Draw.Options && !Graphics.bDisplayKeybindsInOptionsMenu)
             {
                 switch(e.KeyCode)
                 {
@@ -286,9 +300,9 @@ namespace TetrisV4
                         break;
 
                     case Keys.Left:
-                        if(iOptionsCursorPosition == 0 && Sound.EnableSound == true)
+                        if(iOptionsCursorPosition == 0 && Sound.IsEnabled() == true)
                         {
-                            Sound.EnableSound = false;
+                            Sound.Enable(false);
                         }
                         else if (iOptionsCursorPosition == 1)
                         {
@@ -301,9 +315,9 @@ namespace TetrisV4
                         break;
 
                     case Keys.Right:
-                        if(iOptionsCursorPosition == 0 && Sound.EnableSound == false)
+                        if (iOptionsCursorPosition == 0 && Sound.IsEnabled() == false)
                         {
-                            Sound.EnableSound = true;
+                            Sound.Enable(true);
                         }
                         else if (iOptionsCursorPosition == 1)
                         {
@@ -312,11 +326,23 @@ namespace TetrisV4
                         break;
 
                     case Keys.Enter:
-                        if(iOptionsCursorPosition == 3)
+                        if(iOptionsCursorPosition == 4)
                         {
                             IWhatToDraw = (int)Draw.MainMenu;
                         }
+                        else if (iOptionsCursorPosition == 3)
+                        {
+                            Graphics.bDisplayKeybindsInOptionsMenu = true;
+                        }
                         break;
+                }
+            }
+
+            else if (IWhatToDraw == (int)Draw.Options && Graphics.bDisplayKeybindsInOptionsMenu)
+            {
+                if(e.KeyCode == Keys.Enter || e.KeyCode == Keys.Escape)
+                {
+                    Graphics.bDisplayKeybindsInOptionsMenu = false;
                 }
             }
         }
@@ -330,7 +356,7 @@ namespace TetrisV4
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            switch(IWhatToDraw)
+            switch (IWhatToDraw)
             {
                 case 0:
                     Graphics.DrawMainMenu(e, iMainMenuCursorPosition);

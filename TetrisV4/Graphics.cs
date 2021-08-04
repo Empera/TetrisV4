@@ -21,6 +21,8 @@ namespace TetrisV4
         static Font fnt = new Font("Comic Sans MS", 18.0f);
         static Font fnt_game = new Font("Trebuchet MS", 60.0f);
 
+        static public bool bDisplayKeybindsInOptionsMenu = false;
+
         static string PointerForCursorPosition = "->";
         static string[] sideText =
         {
@@ -33,8 +35,19 @@ namespace TetrisV4
             "Music: ",
             "Volume: ",
             "Speed: ",
+            "Keybinds",
             "Back"
         };
+        private static string[] keybinds =
+        {
+            "<M> - Mute/Unmute music",
+            "<P> - Pause",
+            "<R> - Rotate block",
+            "<Left key> - Push block left",
+            "<Right key> - Push block right",
+            "<Down key> - Quickly move block downwards"
+        };
+
         static readonly float PointerPosition = 500.0f;
         static readonly float OptionsPointerPosition = 300.0f;
 
@@ -44,7 +57,7 @@ namespace TetrisV4
         static readonly float fOptionsTextXPosition = 300.0f;
         static readonly float fOptionsTextYPosition = 250.0f;
 
-        static readonly int iTextOffset = 30;
+        static readonly int iTextOffset = 50;
 
         static Image[] block_images;
         
@@ -192,13 +205,27 @@ namespace TetrisV4
         static public void DrawOptionsMenu(PaintEventArgs e, int iOptionsCursorPosition)
         {
             e.Graphics.FillRectangle(cBlack, background);
+            if (!bDisplayKeybindsInOptionsMenu)
+            {
+                
 
-            e.Graphics.DrawString(optionsText[0] + (Sound.IsEnabled() ? "Enabled" : "Disabled"), fnt, cAzure, fOptionsTextXPosition, fOptionsTextYPosition + 50);
-            e.Graphics.DrawString(optionsText[1] + Sound.GetVolumeLevel() + "%", fnt, cAzure, fOptionsTextXPosition, fOptionsTextYPosition + 100);
-            e.Graphics.DrawString(optionsText[2] + "1x", fnt, cAzure, fOptionsTextXPosition, fOptionsTextYPosition + 150);
-            e.Graphics.DrawString(optionsText[3], fnt, cAzure, fOptionsTextXPosition, fOptionsTextYPosition + 200);
+                e.Graphics.DrawString(optionsText[0] + (Sound.IsEnabled() ? "Enabled" : "Disabled"), fnt, cAzure, fOptionsTextXPosition, fOptionsTextYPosition + 50);
+                e.Graphics.DrawString(optionsText[1] + Sound.GetVolumeLevel() + "%", fnt, cAzure, fOptionsTextXPosition, fOptionsTextYPosition + 100);
+                e.Graphics.DrawString(optionsText[2] + "1x", fnt, cAzure, fOptionsTextXPosition, fOptionsTextYPosition + 150);
+                e.Graphics.DrawString(optionsText[3], fnt, cAzure, fOptionsTextXPosition, fOptionsTextYPosition + 200);
+                e.Graphics.DrawString(optionsText[4], fnt, cAzure, fOptionsTextXPosition, fOptionsTextYPosition + 250);
 
-            e.Graphics.DrawString(PointerForCursorPosition, fnt, cAzure, fOptionsTextXPosition - 50.0f, OptionsPointerPosition + 50.0f * iOptionsCursorPosition);
+                e.Graphics.DrawString(PointerForCursorPosition, fnt, cAzure, fOptionsTextXPosition - 50.0f, OptionsPointerPosition + 50.0f * iOptionsCursorPosition);
+                return;
+            }
+
+            for(int x = 0; x < keybinds.Length; ++x)
+            {
+                e.Graphics.DrawString(keybinds[x], fnt, cAzure, fOptionsTextXPosition - 50.0f, fOptionsTextYPosition + iTextOffset * x);
+            }
+
+            e.Graphics.DrawString("Back", fnt, cAzure, fOptionsTextXPosition - 50.0f, fOptionsTextYPosition + iTextOffset * (keybinds.Length + 1));
+            e.Graphics.DrawString(PointerForCursorPosition, fnt, cAzure, fOptionsTextXPosition - 100.0f, fOptionsTextYPosition + iTextOffset * (keybinds.Length + 1));
         }
     }
 }
