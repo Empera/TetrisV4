@@ -90,7 +90,6 @@ namespace TetrisV4
             }
             catch (Exception e)
             {
-                MessageBox.Show("Error: " + e.ToString());
                 block_images = null;
                 return false;
 
@@ -226,6 +225,11 @@ namespace TetrisV4
 
             e.Graphics.DrawString("Back", fnt, cAzure, fOptionsTextXPosition - 50.0f, fOptionsTextYPosition + iTextOffset * (keybinds.Length + 1));
             e.Graphics.DrawString(PointerForCursorPosition, fnt, cAzure, fOptionsTextXPosition - 100.0f, fOptionsTextYPosition + iTextOffset * (keybinds.Length + 1));
+        }
+
+        static public void DrawHighscore(PaintEventArgs e)
+        {
+
         }
     }
 }

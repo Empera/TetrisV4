@@ -84,7 +84,7 @@ namespace TetrisV4
         static private int IWhatToDraw = 0;
         static private int iHighscore = 0;
 
-        static private float fVersion = 0.1f;
+        static private float fVersion = 0.2f;
 
         static private bool bGameOver = false;
         static private bool bGameIsRunning = true;
@@ -143,7 +143,30 @@ namespace TetrisV4
 
             if(!Graphics.LoadGameFiles()) //If the files are not loaded, exit the application.
             {
+                MessageBox.Show("Required game files could not be loaded due to being missing or corrupted. Program will exit.");
+                FileWriter.WriteErrorToLogFile(0);
                 Environment.Exit(1);
+            }
+
+            int status = FileWriter.InitializeFiles();
+
+            switch(status)
+            {
+                //Success, do nothing.
+                case 0:
+                    break;
+
+                //Unable to create directory.
+                case 1:
+                    MessageBox.Show("Unable to create required path to directory, no files will be created.");
+                    FileWriter.WriteErrorToLogFile(1);
+                    break;
+
+                //Unable to create files.
+                case 2:
+                    MessageBox.Show("Path was found, but files could not be created.");
+                    FileWriter.WriteErrorToLogFile(2);
+                    break;
             }
 
             Sound.InitializeSound();
@@ -167,6 +190,7 @@ namespace TetrisV4
 
         private void Key_Down_Event_Handler(object sender, KeyEventArgs e)
         {
+            //First comes key inputs that are global - independent of any view.
             if(e.KeyCode == Keys.M)
             {
                 if (Sound.IsMusicPlaying())
