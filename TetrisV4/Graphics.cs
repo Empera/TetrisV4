@@ -54,6 +54,10 @@ namespace TetrisV4
         static readonly float fSideTextXPosition = 380.0f;
         static readonly float fSideTextYPosition = 220.0f;
 
+        static readonly int block_size = 30;
+        static readonly int nextBlockXPos = 14;
+        static readonly int nextBlockYPos = 1;
+
         static readonly float fOptionsTextXPosition = 300.0f;
         static readonly float fOptionsTextYPosition = 250.0f;
 
@@ -125,80 +129,42 @@ namespace TetrisV4
             e.Graphics.FillRectangle(cBlack, background);
 
 
-            //Print the Tetris map.
-            for (int y = 0; y < 22; ++y)
-                for (int x = 0; x < 21; ++x)
-                {
-                    fieldPoint.X = (x * 30);
-                    fieldPoint.Y = (y * 30);
-
-                    gameFieldBackground.X = fieldPoint.X;
-                    gameFieldBackground.Y = fieldPoint.Y;
-
-                    switch (tetrisMap[x, y])
-                    {
-                        case BLOCK.EMPTY:   e.Graphics.FillRectangle(cBlack, gameFieldBackground);                      break;
-                        case BLOCK.BORDER:  e.Graphics.DrawImage(block_images[(int)BLOCK.BORDER - 1], fieldPoint);      break;
-                        case BLOCK.YELLOW:  e.Graphics.DrawImage(block_images[(int)BLOCK.YELLOW - 1], fieldPoint);      break;
-                        case BLOCK.BLUE:    e.Graphics.DrawImage(block_images[(int)BLOCK.BLUE - 1], fieldPoint);        break;
-                        case BLOCK.GREEN:   e.Graphics.DrawImage(block_images[(int)BLOCK.GREEN - 1], fieldPoint);       break;
-                        case BLOCK.PURPLE:  e.Graphics.DrawImage(block_images[(int)BLOCK.PURPLE - 1], fieldPoint);      break;
-                        case BLOCK.RED:     e.Graphics.DrawImage(block_images[(int)BLOCK.RED - 1], fieldPoint);         break;
-                        case BLOCK.ORANGE:  e.Graphics.DrawImage(block_images[(int)BLOCK.ORANGE - 1], fieldPoint);      break;
-                        case BLOCK.CYAN:    e.Graphics.DrawImage(block_images[(int)BLOCK.CYAN - 1], fieldPoint);        break;
-                        default:    break;
-                    }
-                }
-
-            //Print the active block.
-            for (int x = 0; x < 4; ++x)
-                for (int y = 0; y < 4; ++y)
-                {
-                    fieldPoint.X = ((x + posX) * 30);
-                    fieldPoint.Y = ((y + posY) * 30);
-
-                    switch (activeBlock[x, y])
-                    {
-                        case BLOCK.YELLOW:  e.Graphics.DrawImage(block_images[(int)BLOCK.YELLOW - 1], fieldPoint);      break;
-                        case BLOCK.BLUE:    e.Graphics.DrawImage(block_images[(int)BLOCK.BLUE - 1], fieldPoint);        break;
-                        case BLOCK.GREEN:   e.Graphics.DrawImage(block_images[(int)BLOCK.GREEN - 1], fieldPoint);       break;
-                        case BLOCK.PURPLE:  e.Graphics.DrawImage(block_images[(int)BLOCK.PURPLE - 1], fieldPoint);      break;
-                        case BLOCK.RED:     e.Graphics.DrawImage(block_images[(int)BLOCK.RED - 1], fieldPoint);         break;
-                        case BLOCK.ORANGE:  e.Graphics.DrawImage(block_images[(int)BLOCK.ORANGE - 1], fieldPoint);      break;
-                        case BLOCK.CYAN:    e.Graphics.DrawImage(block_images[(int)BLOCK.CYAN - 1], fieldPoint);        break;
-                        default:    break;
-                    }
-                }
-
-            //Print the upcoming block.
-            for (int x = 0; x < 4; ++x)
-                for (int y = 0; y < 4; ++y)
-                {
-                    fieldPoint.X = ((x + 14) * 30);
-                    fieldPoint.Y = ((y + 1) * 30);
-
-                    switch (nextBlock[x, y])
-                    {
-                        case BLOCK.YELLOW:  e.Graphics.DrawImage(block_images[(int)BLOCK.YELLOW - 1], fieldPoint);      break;
-                        case BLOCK.BLUE:    e.Graphics.DrawImage(block_images[(int)BLOCK.BLUE - 1], fieldPoint);        break;
-                        case BLOCK.GREEN:   e.Graphics.DrawImage(block_images[(int)BLOCK.GREEN - 1], fieldPoint);       break;
-                        case BLOCK.PURPLE:  e.Graphics.DrawImage(block_images[(int)BLOCK.PURPLE - 1], fieldPoint);      break;
-                        case BLOCK.RED:     e.Graphics.DrawImage(block_images[(int)BLOCK.RED - 1], fieldPoint);         break;
-                        case BLOCK.ORANGE:  e.Graphics.DrawImage(block_images[(int)BLOCK.ORANGE - 1], fieldPoint);      break;
-                        case BLOCK.CYAN:    e.Graphics.DrawImage(block_images[(int)BLOCK.CYAN - 1], fieldPoint);        break;
-                        default:    break;
-                    }
-                }
+            DrawBlocks(e, tetrisMap, 0, 0);
+            DrawBlocks(e, activeBlock, posX, posY);
+            DrawBlocks(e, nextBlock, nextBlockXPos, nextBlockYPos);
 
             e.Graphics.DrawString(sideText[0] + highscore, fnt, cAzure, fSideTextXPosition, fSideTextYPosition);
             e.Graphics.DrawString(sideText[1], fnt, cAzure, fSideTextXPosition, fSideTextYPosition + iTextOffset * 3);
             e.Graphics.DrawString(sideText[2], fnt, cAzure, fSideTextXPosition, fSideTextYPosition + iTextOffset * 4);
-
+            
             if(gameOver)
             {
                 e.Graphics.DrawString("Game over.\n<Enter> - Restart.", fnt, cAzure, fSideTextXPosition, fSideTextYPosition + iTextOffset * 6);
             }
 
+        }
+
+        static private void DrawBlocks(PaintEventArgs e, BLOCK[,] blocks, int Xpos, int Ypos)
+        {
+
+            for(int x = 0; x < blocks.GetLength(0); ++x) {
+                for(int y = 0; y < blocks.GetLength(1); ++y) {
+                    
+                    switch(blocks[x, y])
+                    {
+                        case BLOCK.BORDER:  e.Graphics.DrawImage(block_images[(int)BLOCK.BORDER - 1],   (Xpos + x) * block_size, (Ypos + y) * block_size);  break;
+                        case BLOCK.YELLOW:  e.Graphics.DrawImage(block_images[(int)BLOCK.YELLOW - 1],   (Xpos + x) * block_size, (Ypos + y) * block_size);  break;
+                        case BLOCK.BLUE:    e.Graphics.DrawImage(block_images[(int)BLOCK.BLUE - 1],     (Xpos + x) * block_size, (Ypos + y) * block_size);  break;
+                        case BLOCK.GREEN:   e.Graphics.DrawImage(block_images[(int)BLOCK.GREEN - 1],    (Xpos + x) * block_size, (Ypos + y) * block_size);  break;
+                        case BLOCK.PURPLE:  e.Graphics.DrawImage(block_images[(int)BLOCK.PURPLE - 1],   (Xpos + x) * block_size, (Ypos + y) * block_size);  break;
+                        case BLOCK.RED:     e.Graphics.DrawImage(block_images[(int)BLOCK.RED - 1],      (Xpos + x) * block_size, (Ypos + y) * block_size);  break;
+                        case BLOCK.ORANGE:  e.Graphics.DrawImage(block_images[(int)BLOCK.ORANGE - 1],   (Xpos + x) * block_size, (Ypos + y) * block_size);  break;
+                        case BLOCK.CYAN:    e.Graphics.DrawImage(block_images[(int)BLOCK.CYAN - 1],     (Xpos + x) * block_size, (Ypos + y) * block_size);  break;
+                        default: break;
+                    }
+
+                }
+            }
         }
 
         static public void DrawOptionsMenu(PaintEventArgs e, int iOptionsCursorPosition)

@@ -486,26 +486,18 @@ namespace TetrisV4
             if (posX < 0) posX = 0;
 
             //Loops for checking if new block intersect with border.
-            for (int column = 0; column < newBlock.GetLength(1); ++column)
-            {
-                for (int row = 0; row < newBlock.GetLength(0); ++row)
-                {
-
+            for (int column = 0; column < newBlock.GetLength(1); ++column) {
+                for (int row = 0; row < newBlock.GetLength(0); ++row) {
                     if ((newBlock[row, column] != BLOCK.EMPTY)
-                    && (tetrisMap[row + posX, column + posY] == BLOCK.BORDER))
-                    {
-                        if (posX < 5)
-                        {
+                        && (tetrisMap[row + posX, column + posY] == BLOCK.BORDER)) {
+                        if (posX < 5) {
                             ++posX;
                             row = -1;
-                        }
-                        else if (posX > 5)
-                        {
+                        } else if (posX > 5) {
                             --posX;
                             row = -1;
                         }
                     }
-
                 }
             }
 
