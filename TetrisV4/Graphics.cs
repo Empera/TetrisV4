@@ -47,6 +47,14 @@ namespace TetrisV4
             "<Right key> - Push block right",
             "<Down key> - Quickly move block downwards"
         };
+        private static string[] tetris_logo =
+        {
+            "TTT EEE ZZZ RRR  III SSS",
+            " T  E    Z  R  R  I  S    ",
+            " T  EEE  Z  RRR   I  SSS ",
+            " T  E    Z  R  R  I    S",
+            " T  EEE  Z  R  R III SSS ",
+        };
 
         static readonly float PointerPosition = 500.0f;
         static readonly float OptionsPointerPosition = 300.0f;
@@ -55,11 +63,16 @@ namespace TetrisV4
         static readonly float fSideTextYPosition = 220.0f;
 
         static readonly int block_size = 30;
+        static readonly int logo_block_size = 20;
         static readonly int nextBlockXPos = 14;
         static readonly int nextBlockYPos = 1;
+        static readonly int logoXPos = 1;
+        static readonly int logoYPos = 7;
 
         static readonly float fOptionsTextXPosition = 300.0f;
         static readonly float fOptionsTextYPosition = 250.0f;
+
+
 
         static readonly int iTextOffset = 50;
 
@@ -107,7 +120,9 @@ namespace TetrisV4
             //Just to make the background black.
             e.Graphics.FillRectangle(cBlack, background);
 
-            e.Graphics.DrawString("Tetris", fnt_game, cAzure, 270.0f, 200.0f);
+            DrawBlocks(e, ConvertStringToBlock(tetris_logo), logoXPos, logoYPos);
+
+            //e.Graphics.DrawString("Tetris", fnt_game, cAzure, 270.0f, 200.0f);
             e.Graphics.DrawString("Play", fnt, cAzure, 350.0f, 500.0f);
             e.Graphics.DrawString("Highscores", fnt, cAzure, 350.0f, 550.0f);
             e.Graphics.DrawString("Options", fnt, cAzure, 350.0f, 600.0f);
@@ -196,6 +211,31 @@ namespace TetrisV4
         static public void DrawHighscore(PaintEventArgs e)
         {
 
+        }
+
+        static private BLOCK[,] ConvertStringToBlock(string[] array)
+        {
+            BLOCK[,] convertedBlock = new BLOCK[array[0].Length, array.Length];
+
+            for(int x = 0; x < array.Length; ++x) { 
+                for(int y = 0; y < array[0].Length; ++y)
+                {
+                    string temp = array[x];
+                    
+                    switch(temp[y])
+                    {
+                        case 'T':   convertedBlock[y, x] = BLOCK.BLUE;   break;
+                        case 'E':   convertedBlock[y, x] = BLOCK.YELLOW; break;
+                        case 'Z':   convertedBlock[y, x] = BLOCK.CYAN;   break;
+                        case 'R':   convertedBlock[y, x] = BLOCK.GREEN;  break;
+                        case 'I':   convertedBlock[y, x] = BLOCK.PURPLE; break;
+                        case 'S':   convertedBlock[y, x] = BLOCK.RED;    break;
+                        case ' ':   convertedBlock[y, x] = BLOCK.EMPTY;  break;
+                        default:  break;
+                    }
+                }
+            }
+            return convertedBlock;
         }
     }
 }
